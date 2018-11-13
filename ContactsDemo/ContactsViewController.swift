@@ -8,12 +8,11 @@
 
 import UIKit
 
-class ContactsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ContactsViewController: UIViewController, AvatarSliderViewDelegate, AvatarSliderViewDataSource {
 
-    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private var collectionViewLayout = AvatarViewLayout()
     private var contactList = [Contact]()
     private let cellReuseIdentifier = "AvatarCell"
+    private var avatarSliderView = AvatarSliderView(frame: .zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +20,20 @@ class ContactsViewController: UIViewController, UICollectionViewDelegate, UIColl
 
         self.loadData()
 
-        self.setupCollectionView()
+        self.setupAvatarSliderView()
+
+        let line = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 100))
+        line.center = CGPoint(x: self.view.frame.width / 2, y: 100)
+        line.backgroundColor = UIColor.black
+        self.view.addSubview(line)
+
+        let left = UIView(frame: CGRect(x: line.frame.origin.x - 88, y: line.frame.origin.y, width: 1, height: 100))
+        left.backgroundColor = UIColor.black
+        self.view.addSubview(left)
+
+        let right = UIView(frame: CGRect(x: line.frame.origin.x + 88, y: line.frame.origin.y, width: 1, height: 100))
+        right.backgroundColor = UIColor.black
+        self.view.addSubview(right)
     }
 
     private func loadData() {
@@ -34,19 +46,30 @@ class ContactsViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
 
-    private func setupCollectionView() {
-        self.collectionView.register(AvatarViewCell.self, forCellWithReuseIdentifier: self.cellReuseIdentifier)
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.backgroundColor = UIColor.white
-        self.collectionView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100)
-        self.collectionView.showsHorizontalScrollIndicator = false
+    private func setupAvatarSliderView() {
+        self.avatarSliderView.register(AvatarViewCell.self, forCellWithReuseIdentifier: self.cellReuseIdentifier)
+        self.avatarSliderView.delegate = self
+        self.avatarSliderView.dataSource = self
+        self.avatarSliderView.backgroundColor = UIColor.white
+        self.avatarSliderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100)
 
-        collectionViewLayout.scrollDirection = .horizontal
-        collectionViewLayout.itemSize = CGSize(width: 72, height: 72)
-        self.collectionView.setCollectionViewLayout(collectionViewLayout, animated: false)
+        self.view.addSubview(self.avatarSliderView)
+    }
 
-        self.view.addSubview(self.collectionView)
+    // MARK: - AvatarSliderView Datasource
+
+    func numberOfItems(in pagerView: AvatarSliderView) -> Int {
+        return self.contactList.count
+    }
+
+    func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> SliderViewCell {
+        let cell = sliderView.dequeueReusableCell(withReuseIdentifier: self.cellReuseIdentifier, at: index)
+
+        if let avatarCell = cell as? AvatarViewCell {
+            avatarCell.imageName = self.contactList[index].avatar_filename
+        }
+
+        return cell
     }
 
     // MARK: - UICollectionView Datasource
@@ -69,20 +92,4 @@ class ContactsViewController: UIViewController, UICollectionViewDelegate, UIColl
         return cell
     }
 
-    // MARK: - UICollectionView Delegate
-
-    // MARK: - UICollectionView Delegate Flow Layout
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 72, height: 72)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let leadingSpacing = (collectionView.frame.width - 72) / 2
-        return UIEdgeInsets(top: 0, left: leadingSpacing, bottom: 0, right: leadingSpacing)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
-    }
 }

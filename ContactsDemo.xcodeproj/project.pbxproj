@@ -18,6 +18,8 @@
 		E98D767E21997D370048FDE9 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D767D21997D370048FDE9 /* Contact.swift */; };
 		E98D7680219981FF0048FDE9 /* AvatarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D767F219981FF0048FDE9 /* AvatarViewCell.swift */; };
 		E9A01970219AA7EB00B21908 /* AvatarViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A0196F219AA7EB00B21908 /* AvatarViewLayout.swift */; };
+		E9A01972219ABA8900B21908 /* AvatarSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A01971219ABA8900B21908 /* AvatarSliderView.swift */; };
+		E9A01974219ABB7200B21908 /* SliderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A01973219ABB7200B21908 /* SliderViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		E98D767D21997D370048FDE9 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		E98D767F219981FF0048FDE9 /* AvatarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarViewCell.swift; sourceTree = "<group>"; };
 		E9A0196F219AA7EB00B21908 /* AvatarViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarViewLayout.swift; sourceTree = "<group>"; };
+		E9A01971219ABA8900B21908 /* AvatarSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarSliderView.swift; sourceTree = "<group>"; };
+		E9A01973219ABB7200B21908 /* SliderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,8 @@
 				E98D767D21997D370048FDE9 /* Contact.swift */,
 				E98D767F219981FF0048FDE9 /* AvatarViewCell.swift */,
 				E9A0196F219AA7EB00B21908 /* AvatarViewLayout.swift */,
+				E9A01971219ABA8900B21908 /* AvatarSliderView.swift */,
+				E9A01973219ABB7200B21908 /* SliderViewCell.swift */,
 			);
 			path = ContactsDemo;
 			sourceTree = "<group>";
@@ -272,7 +278,9 @@
 				E98D767E21997D370048FDE9 /* Contact.swift in Sources */,
 				E9A01970219AA7EB00B21908 /* AvatarViewLayout.swift in Sources */,
 				E98D7680219981FF0048FDE9 /* AvatarViewCell.swift in Sources */,
+				E9A01974219ABB7200B21908 /* SliderViewCell.swift in Sources */,
 				E98D764C219956310048FDE9 /* AppDelegate.swift in Sources */,
+				E9A01972219ABA8900B21908 /* AvatarSliderView.swift in Sources */,
 				E98D767A219958D40048FDE9 /* ContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
