@@ -11,6 +11,7 @@ import UIKit
 class ContactsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private var collectionViewLayout = AvatarViewLayout()
     private var contactList = [Contact]()
     private let cellReuseIdentifier = "AvatarCell"
 
@@ -41,10 +42,9 @@ class ContactsViewController: UIViewController, UICollectionViewDelegate, UIColl
         self.collectionView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100)
         self.collectionView.showsHorizontalScrollIndicator = false
 
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 72, height: 72)
-        self.collectionView.setCollectionViewLayout(layout, animated: false)
+        collectionViewLayout.scrollDirection = .horizontal
+        collectionViewLayout.itemSize = CGSize(width: 72, height: 72)
+        self.collectionView.setCollectionViewLayout(collectionViewLayout, animated: false)
 
         self.view.addSubview(self.collectionView)
     }

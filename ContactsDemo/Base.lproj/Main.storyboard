@@ -39,7 +39,7 @@
                         <viewLayoutGuide key="safeArea" id="uKx-mr-U8r"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" id="xOE-DV-YUJ"/>
+                    <navigationItem key="navigationItem" title="Contacts" id="xOE-DV-YUJ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TUf-KW-hzO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
