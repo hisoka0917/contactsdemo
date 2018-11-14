@@ -20,7 +20,7 @@ public protocol AvatarSliderViewDelegate: NSObjectProtocol {
     @objc optional func sliderViewDidScroll(_ sliderView: AvatarSliderView)
 }
 
-public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionViewDataSource {
 
     public weak var dataSource: AvatarSliderViewDataSource?
     public weak var delegate: AvatarSliderViewDelegate?
@@ -60,7 +60,7 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         self.collectionViewLayout.scrollDirection = .horizontal
         self.collectionViewLayout.itemSize = CGSize(width: self.cellWidth, height: self.cellWidth)
         self.collectionViewLayout.itemSpacing = self.interitemSpacing
-        self.collectionViewLayout.minimumInteritemSpacing = 0
+//        self.collectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
         self.addSubview(self.collectionView)
     }
@@ -112,22 +112,22 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
 
     // MARK: - UICollectionViewDelegateFlowLayout
 
-    public func collectionView(_ collectionView: UICollectionView,
-                                layout collectionViewLayout: UICollectionViewLayout,
-                                sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: cellWidth, height: cellWidth)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView,
-                                layout collectionViewLayout: UICollectionViewLayout,
-                                insetForSectionAt section: Int) -> UIEdgeInsets {
-        let leadingSpacing = (collectionView.frame.width - cellWidth) / 2
-        return UIEdgeInsets(top: 0, left: leadingSpacing, bottom: 0, right: leadingSpacing)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView,
-                                layout collectionViewLayout: UICollectionViewLayout,
-                                minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return interitemSpacing
-    }
+//    public func collectionView(_ collectionView: UICollectionView,
+//                                layout collectionViewLayout: UICollectionViewLayout,
+//                                sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: cellWidth, height: cellWidth)
+//    }
+//
+//    public func collectionView(_ collectionView: UICollectionView,
+//                                layout collectionViewLayout: UICollectionViewLayout,
+//                                insetForSectionAt section: Int) -> UIEdgeInsets {
+//        let leadingSpacing = (collectionView.frame.width - cellWidth) / 2
+//        return UIEdgeInsets(top: 0, left: leadingSpacing, bottom: 0, right: leadingSpacing)
+//    }
+//
+//    public func collectionView(_ collectionView: UICollectionView,
+//                                layout collectionViewLayout: UICollectionViewLayout,
+//                                minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return interitemSpacing
+//    }
 }
