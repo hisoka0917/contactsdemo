@@ -11,12 +11,12 @@ import UIKit
 class AvatarViewLayout: UICollectionViewFlowLayout {
 
     var previousOffset: CGFloat = 0
-    var currentPage: Int = 0
     var itemSpacing: CGFloat = 0
     var leadingSpacing: CGFloat = 0
     var contentSize: CGSize = .zero
     var numberOfItems: Int = 0
     private var cacheAttributes = [UICollectionViewLayoutAttributes]()
+    private var currentPage: Int = 0
 
     // MARK: - Override
     override func prepare() {
@@ -38,11 +38,9 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
             return CGPoint.zero
         }
 
-        let actualItemWidth = itemSize.width + itemSpacing
-        currentPage = Int(round(proposedContentOffset.x / actualItemWidth))
-        currentPage = min(currentPage, numberOfItems - 1)
-        currentPage = max(currentPage, 0)
-        let updatedOffset = actualItemWidth * CGFloat(currentPage)
+        let itemWidth = itemSize.width + itemSpacing
+        let targetItem = self.targetItem(for: proposedContentOffset.x)
+        let updatedOffset = itemWidth * CGFloat(targetItem)
 
         return CGPoint(x: updatedOffset, y: proposedContentOffset.y)
     }
@@ -86,6 +84,22 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
             cacheAttributes.append(attributes)
             xOffset += itemWidth
         }
+    }
+
+    // MARK: - Methods
+
+    func contentOffset(for index: Int) -> CGPoint {
+        let itemWidth = itemSize.width + itemSpacing
+        let offsetX = CGFloat(index) * itemWidth
+        return CGPoint(x: offsetX, y: 0)
+    }
+
+    func targetItem(for contentOffset: CGFloat) -> Int {
+        let itemWidth = itemSize.width + itemSpacing
+        currentPage = Int(round(contentOffset / itemWidth))
+        currentPage = min(currentPage, numberOfItems - 1)
+        currentPage = max(currentPage, 0)
+        return currentPage
     }
 
 }

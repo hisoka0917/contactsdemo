@@ -11,7 +11,7 @@ import UIKit
 @objc
 public protocol AvatarSliderViewDataSource: NSObjectProtocol {
     func numberOfItems(in pagerView: AvatarSliderView) -> Int
-    func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> SliderViewCell
+    func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> AvatarViewCell
 }
 
 @objc
@@ -28,6 +28,8 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
     private var collectionView: UICollectionView!
     private var collectionViewLayout: AvatarViewLayout!
     private var numberOfItems: Int = 0
+    private var previousItem: Int = 0
+    private var targetItem: Int = 0
     private let cellWidth: CGFloat = 72
     private let interitemSpacing: CGFloat = 16
 
@@ -60,7 +62,6 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         self.collectionViewLayout.scrollDirection = .horizontal
         self.collectionViewLayout.itemSize = CGSize(width: self.cellWidth, height: self.cellWidth)
         self.collectionViewLayout.itemSpacing = self.interitemSpacing
-//        self.collectionViewLayout.minimumInteritemSpacing = interitemSpacing
 
         self.addSubview(self.collectionView)
     }
@@ -75,13 +76,30 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         self.collectionView.register(nib, forCellWithReuseIdentifier: identifier)
     }
 
-    open func dequeueReusableCell(withReuseIdentifier identifier: String, at index: Int) -> SliderViewCell {
+    public func dequeueReusableCell(withReuseIdentifier identifier: String, at index: Int) -> AvatarViewCell {
         let indexPath = IndexPath(item: index, section: 0)
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
-        guard let sliderCell = cell as? SliderViewCell else {
-            fatalError("Cell class must be subclass of FSPagerViewCell")
+        guard let sliderCell = cell as? AvatarViewCell else {
+            fatalError("Cell class must be subclass of AvatarViewCell")
         }
         return sliderCell
+    }
+
+    public func scrollToItem(at index: Int, animated: Bool) {
+        guard index < self.numberOfItems else {
+            return
+        }
+
+        let contentOffset = self.collectionViewLayout.contentOffset(for: index)
+        self.collectionView.setContentOffset(contentOffset, animated: animated)
+    }
+
+    public func deselectItem(at index: Int, animated: Bool) {
+        guard index < self.numberOfItems else {
+            return
+        }
+        let indexPath = IndexPath(item: index, section: 0)
+        self.collectionView.deselectItem(at: indexPath, animated: animated)
     }
 
     // MARK: - UICollectionView Datasource
@@ -105,29 +123,62 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
             return UICollectionViewCell()
         }
 
+        if indexPath.row == 0 && self.previousItem == 0 && self.targetItem == 0 {
+            cell.isSelected = true
+        } else {
+            cell.isSelected = false
+        }
+
         return cell
     }
 
     // MARK: - UICollectionView Delegate
 
-    // MARK: - UICollectionViewDelegateFlowLayout
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let function = self.delegate?.sliderView(_:didSelectItemAt:) else {
+            return
+        }
 
-//    public func collectionView(_ collectionView: UICollectionView,
-//                                layout collectionViewLayout: UICollectionViewLayout,
-//                                sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: cellWidth, height: cellWidth)
-//    }
-//
-//    public func collectionView(_ collectionView: UICollectionView,
-//                                layout collectionViewLayout: UICollectionViewLayout,
-//                                insetForSectionAt section: Int) -> UIEdgeInsets {
-//        let leadingSpacing = (collectionView.frame.width - cellWidth) / 2
-//        return UIEdgeInsets(top: 0, left: leadingSpacing, bottom: 0, right: leadingSpacing)
-//    }
-//
-//    public func collectionView(_ collectionView: UICollectionView,
-//                                layout collectionViewLayout: UICollectionViewLayout,
-//                                minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return interitemSpacing
-//    }
+        let index = indexPath.item % self.numberOfItems
+        function(self, index)
+    }
+
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        print("scroll view did end scroll")
+        let contentOffset = scrollView.contentOffset
+        self.targetItem = self.collectionViewLayout.targetItem(for: contentOffset.x)
+        self.selectItem(for: self.previousItem, selected: false)
+        self.selectItem(for: targetItem, selected: true)
+        self.previousItem = self.targetItem
+    }
+
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                          withVelocity velocity: CGPoint,
+                                          targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        print("scroll view will end dragging")
+        let offsetX = targetContentOffset.pointee.x
+        self.targetItem = self.collectionViewLayout.targetItem(for: offsetX)
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        print("scroll view did end dragging")
+    }
+
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        print("scroll view will begin dragging")
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scroll view did end decelerating")
+        self.selectItem(for: self.previousItem, selected: false)
+        self.selectItem(for: self.targetItem, selected: true)
+        self.previousItem = self.targetItem
+    }
+
+    // MARK: - Private Methods
+
+    private func selectItem(for index: Int, selected: Bool) {
+        let indexPath = IndexPath(item: index, section: 0)
+        self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+    }
 }
