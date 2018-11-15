@@ -10,7 +10,7 @@ import UIKit
 
 @objc
 public protocol AvatarSliderViewDataSource: NSObjectProtocol {
-    func numberOfItems(in pagerView: AvatarSliderView) -> Int
+    func numberOfItems(in sliderView: AvatarSliderView) -> Int
     func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> AvatarViewCell
 }
 
