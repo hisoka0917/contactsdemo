@@ -16,9 +16,12 @@ protocol ContactsViewDataSource: NSObjectProtocol {
 class ContactsView: UIView {
     public weak var dataSource: ContactsViewDataSource?
 
-    private var collectionView: UICollectionView!
-    private var collectionViewLayout: UICollectionViewFlowLayout!
+    private var avatarSliderView = AvatarSliderView(frame: .zero)
+    private var pagerView = ContactPagerView(frame: .zero)
+    private var itemCounts: Int = 0
+    private let avatarReuseIdentifier = "AvatarCell"
     private let pageReuseIdentifier = "ContactPageCell"
+    private let avatarSliderHeight: CGFloat = 100
 
     // MARK: - Lifecycle
 
@@ -34,55 +37,107 @@ class ContactsView: UIView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.collectionView.frame = self.bounds
-        self.collectionViewLayout.itemSize = self.bounds.size
-        self.collectionView.reloadData()
+
+        self.avatarSliderView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.avatarSliderHeight)
+
+        let frame = CGRect(x: 0,
+                           y: self.avatarSliderHeight,
+                           width: self.bounds.width,
+                           height: self.bounds.height - self.avatarSliderHeight)
+        self.pagerView.frame = frame
     }
 
     private func commonInit() {
-        self.collectionViewLayout = UICollectionViewFlowLayout()
+        self.setupAvatarSlider()
+        self.setupPagerView()
+    }
 
-        self.collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: self.collectionViewLayout)
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.backgroundColor = UIColor.white
-        self.collectionView.showsHorizontalScrollIndicator = false
-        self.collectionView.showsVerticalScrollIndicator = true
-        self.collectionView.isPagingEnabled = true
-        self.collectionView.register(ContactPageCell.self, forCellWithReuseIdentifier: self.pageReuseIdentifier)
+    private func setupAvatarSlider() {
+        self.avatarSliderView.register(AvatarViewCell.self, forCellWithReuseIdentifier: self.avatarReuseIdentifier)
+        self.avatarSliderView.delegate = self
+        self.avatarSliderView.dataSource = self
+        self.avatarSliderView.backgroundColor = UIColor.white
+        self.avatarSliderView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.avatarSliderHeight)
 
-        self.collectionViewLayout.scrollDirection = .vertical
-        self.collectionViewLayout.itemSize = self.bounds.size
-        self.collectionViewLayout.minimumInteritemSpacing = 0
-        self.collectionViewLayout.minimumLineSpacing = 0
+        self.addSubview(self.avatarSliderView)
+    }
 
-        self.addSubview(self.collectionView)
+    private func setupPagerView() {
+        self.pagerView.register(ContactPageCell.self, forCellWithReuseIdentifier: self.pageReuseIdentifier)
+        self.pagerView.delegate = self
+        self.pagerView.dataSource = self
+        self.pagerView.backgroundColor = UIColor.white
+
+        self.addSubview(self.pagerView)
     }
 
 }
 
-extension ContactsView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ContactsView: ContactPagerViewDelegate, ContactPagerViewDataSource {
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfPages(in pagerView: ContactPagerView) -> Int {
         guard let dataSource = self.dataSource else {
             return 0
         }
-        return dataSource.numberOfItems(in: self)
+        self.itemCounts = dataSource.numberOfItems(in: self)
+        return self.itemCounts
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
-    }
+    func pagerView(_ pagerView: ContactPagerView, cellForItemAt index: Int) -> ContactPageCell {
+        let cell = pagerView.dequeueReusableCell(withReuseIdentifier: self.pageReuseIdentifier, at: index)
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.pageReuseIdentifier, for: indexPath)
-
-        if let contactPageCell = cell as? ContactPageCell, let dataSource = self.dataSource {
-            let contact = dataSource.contactsView(self, contactDataAt: indexPath.section)
-            contactPageCell.contactData = contact
+        if let dataSource = self.dataSource {
+            let contact = dataSource.contactsView(self, contactDataAt: index)
+            cell.contactData = contact
         }
 
         return cell
     }
 
+    func pagerViewDidScroll(_ pagerView: ContactPagerView) {
+        let offset = pagerView.scrollOffset
+        let avatarItemWidth = self.avatarSliderView.cellWidth + self.avatarSliderView.interitemSpacing
+        let offsetX = offset * avatarItemWidth
+        self.avatarSliderView.setContentOffset(offsetX, animated: false)
+    }
+
+    func pagerViewDidStopped(at index: Int) {
+        self.avatarSliderView.setSelectItem(index)
+    }
+    
+}
+
+extension ContactsView: AvatarSliderViewDelegate, AvatarSliderViewDataSource {
+
+    // MARK: - AvatarSliderView Datasource
+
+    func numberOfItems(in sliderView: AvatarSliderView) -> Int {
+        guard let dataSource = self.dataSource else {
+            return 0
+        }
+        self.itemCounts = dataSource.numberOfItems(in: self)
+        return self.itemCounts
+    }
+
+    func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> AvatarViewCell {
+        let cell = sliderView.dequeueReusableCell(withReuseIdentifier: self.avatarReuseIdentifier, at: index)
+        if let dataSource = self.dataSource {
+            let contact = dataSource.contactsView(self, contactDataAt: index)
+            cell.imageName = contact.avatar_filename
+        }
+        return cell
+    }
+
+    // MARK: - AvatarSliderView Delegate
+
+    func sliderView(_ sliderView: AvatarSliderView, didSelectItemAt index: Int) {
+        sliderView.deselectItem(at: index, animated: false)
+        sliderView.scrollToItem(at: index, animated: true)
+    }
+
+    func sliderViewDidScroll(_ sliderView: AvatarSliderView) {
+        let offset = sliderView.scrollOffset
+        let offsetY = offset * self.pagerView.frame.height
+        self.pagerView.setContentOffset(offsetY, animated: false)
+    }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ContactPageCell: UICollectionViewCell {
+public class ContactPageCell: UICollectionViewCell {
 
     private var nameLabel = UILabel()
     private var titleLabel = UILabel()
@@ -34,7 +34,7 @@ class ContactPageCell: UICollectionViewCell {
         self.commonInit()
     }
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
 
         var topY: CGFloat = 20

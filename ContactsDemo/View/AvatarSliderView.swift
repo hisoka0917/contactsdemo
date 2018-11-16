@@ -8,7 +8,6 @@
 
 import UIKit
 
-@objc
 public protocol AvatarSliderViewDataSource: NSObjectProtocol {
     func numberOfItems(in sliderView: AvatarSliderView) -> Int
     func sliderView(_ sliderView: AvatarSliderView, cellForItemAt index: Int) -> AvatarViewCell
@@ -25,13 +24,21 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
     public weak var dataSource: AvatarSliderViewDataSource?
     public weak var delegate: AvatarSliderViewDelegate?
 
+    /// The percentage of x position at which the origin of the content view is offset from the origin of the sliderView.
+    public var scrollOffset: CGFloat {
+        let contentOffset = self.collectionView.contentOffset.x
+        let scrollOffset = Double(contentOffset/self.collectionViewLayout.itemWidth)
+        return fmod(CGFloat(scrollOffset), CGFloat(Double(self.numberOfItems)))
+    }
+
     private var collectionView: UICollectionView!
     private var collectionViewLayout: AvatarViewLayout!
+    private var isScrolling: Bool = false
     private var numberOfItems: Int = 0
     private var previousItem: Int = 0
     private var targetItem: Int = 0
-    private let cellWidth: CGFloat = 72
-    private let interitemSpacing: CGFloat = 16
+    internal var cellWidth: CGFloat = 72
+    internal var interitemSpacing: CGFloat = 16
 
     // MARK: - Lifecycle
 
@@ -89,7 +96,11 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         guard index < self.numberOfItems else {
             return
         }
+        guard !self.isScrolling else {
+            return
+        }
 
+        self.isScrolling = true
         let contentOffset = self.collectionViewLayout.contentOffset(for: index)
         self.collectionView.setContentOffset(contentOffset, animated: animated)
     }
@@ -100,6 +111,19 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         }
         let indexPath = IndexPath(item: index, section: 0)
         self.collectionView.deselectItem(at: indexPath, animated: animated)
+    }
+
+    public func setContentOffset(_ x: CGFloat, animated: Bool) {
+        if !self.isScrolling {
+            self.collectionView.setContentOffset(CGPoint(x: x, y: 0), animated: animated)
+        }
+    }
+
+    public func setSelectItem(_ index: Int) {
+        self.targetItem = index
+        self.selectItem(for: self.previousItem, selected: false)
+        self.selectItem(for: self.targetItem, selected: true)
+        self.previousItem = self.targetItem
     }
 
     // MARK: - UICollectionView Datasource
@@ -138,41 +162,43 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         guard let function = self.delegate?.sliderView(_:didSelectItemAt:) else {
             return
         }
-
+        self.selectItem(for: self.previousItem, selected: false)
         let index = indexPath.item % self.numberOfItems
         function(self, index)
     }
 
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        print("scroll view did end scroll")
         let contentOffset = scrollView.contentOffset
         self.targetItem = self.collectionViewLayout.targetItem(for: contentOffset.x)
         self.selectItem(for: self.previousItem, selected: false)
-        self.selectItem(for: targetItem, selected: true)
+        self.selectItem(for: self.targetItem, selected: true)
         self.previousItem = self.targetItem
+        self.isScrolling = false
     }
 
     public func scrollViewWillEndDragging(_ scrollView: UIScrollView,
                                           withVelocity velocity: CGPoint,
                                           targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        print("scroll view will end dragging")
         let offsetX = targetContentOffset.pointee.x
         self.targetItem = self.collectionViewLayout.targetItem(for: offsetX)
     }
 
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print("scroll view did end dragging")
-    }
-
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("scroll view will begin dragging")
+        self.isScrolling = true
     }
 
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("scroll view did end decelerating")
         self.selectItem(for: self.previousItem, selected: false)
         self.selectItem(for: self.targetItem, selected: true)
         self.previousItem = self.targetItem
+        self.isScrolling = false
+    }
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let function = self.delegate?.sliderViewDidScroll(_:) else {
+            return
+        }
+        function(self)
     }
 
     // MARK: - Private Methods

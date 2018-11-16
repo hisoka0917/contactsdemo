@@ -13,6 +13,7 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
     var previousOffset: CGFloat = 0
     var itemSpacing: CGFloat = 0
     var leadingSpacing: CGFloat = 0
+    var itemWidth: CGFloat = 0
     var contentSize: CGSize = .zero
     var numberOfItems: Int = 0
     private var cacheAttributes = [UICollectionViewLayoutAttributes]()
@@ -22,6 +23,7 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
     override func prepare() {
         if let collectionView = self.collectionView, let sliderView = collectionView.superview as? AvatarSliderView {
             leadingSpacing = (collectionView.frame.width - itemSize.width) / 2
+            itemWidth = itemSize.width + itemSpacing
             self.numberOfItems = sliderView.collectionView(collectionView, numberOfItemsInSection: 0)
             var contentWidth = leadingSpacing * 2
             contentWidth += itemSize.width * CGFloat(numberOfItems)
@@ -29,7 +31,6 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
             self.contentSize = CGSize(width: contentWidth, height: collectionView.frame.height)
             self.calculateAttributes()
         }
-
     }
 
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint,
@@ -38,7 +39,6 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
             return CGPoint.zero
         }
 
-        let itemWidth = itemSize.width + itemSpacing
         let targetItem = self.targetItem(for: proposedContentOffset.x)
         let updatedOffset = itemWidth * CGFloat(targetItem)
 
@@ -73,7 +73,6 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
 
         var xOffset = leadingSpacing
         let yOffset = (collectionView.frame.height - itemSize.height) / 2
-        let itemWidth = itemSize.width + itemSpacing
 
         for item in 0 ..< numberOfItems {
             let indexPath = IndexPath(item: item, section: 0)
@@ -89,13 +88,11 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
     // MARK: - Methods
 
     func contentOffset(for index: Int) -> CGPoint {
-        let itemWidth = itemSize.width + itemSpacing
         let offsetX = CGFloat(index) * itemWidth
         return CGPoint(x: offsetX, y: 0)
     }
 
     func targetItem(for contentOffset: CGFloat) -> Int {
-        let itemWidth = itemSize.width + itemSpacing
         currentPage = Int(round(contentOffset / itemWidth))
         currentPage = min(currentPage, numberOfItems - 1)
         currentPage = max(currentPage, 0)

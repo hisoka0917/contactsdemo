@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E942E20B219D625C005891DB /* ContactPageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E942E20A219D625C005891DB /* ContactPageCell.swift */; };
 		E942E210219D6C92005891DB /* ContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E942E20F219D6C92005891DB /* ContactsView.swift */; };
+		E9617D3E219E65BB0098ADC0 /* ContactPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9617D3D219E65BB0098ADC0 /* ContactPagerView.swift */; };
 		E98D764C219956310048FDE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D764B219956310048FDE9 /* AppDelegate.swift */; };
 		E98D7651219956310048FDE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E98D764F219956310048FDE9 /* Main.storyboard */; };
 		E98D7653219956320048FDE9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E98D7652219956320048FDE9 /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		E942E20A219D625C005891DB /* ContactPageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPageCell.swift; sourceTree = "<group>"; };
 		E942E20F219D6C92005891DB /* ContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsView.swift; sourceTree = "<group>"; };
+		E9617D3D219E65BB0098ADC0 /* ContactPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPagerView.swift; sourceTree = "<group>"; };
 		E98D7648219956310048FDE9 /* ContactsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98D764B219956310048FDE9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E98D7650219956310048FDE9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				E9A01971219ABA8900B21908 /* AvatarSliderView.swift */,
 				E942E20A219D625C005891DB /* ContactPageCell.swift */,
 				E942E20F219D6C92005891DB /* ContactsView.swift */,
+				E9617D3D219E65BB0098ADC0 /* ContactPagerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				E942E20B219D625C005891DB /* ContactPageCell.swift in Sources */,
 				E9A01972219ABA8900B21908 /* AvatarSliderView.swift in Sources */,
 				E98D767A219958D40048FDE9 /* ContactsViewController.swift in Sources */,
+				E9617D3E219E65BB0098ADC0 /* ContactPagerView.swift in Sources */,
 				E942E210219D6C92005891DB /* ContactsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
