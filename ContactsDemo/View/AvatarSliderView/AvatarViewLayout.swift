@@ -10,25 +10,25 @@ import UIKit
 
 class AvatarViewLayout: UICollectionViewFlowLayout {
 
-    var previousOffset: CGFloat = 0
     var itemSpacing: CGFloat = 0
     var leadingSpacing: CGFloat = 0
     var itemWidth: CGFloat = 0
     var contentSize: CGSize = .zero
     var numberOfItems: Int = 0
     private var cacheAttributes = [UICollectionViewLayoutAttributes]()
-    private var currentPage: Int = 0
 
     // MARK: - Override
     override func prepare() {
         if let collectionView = self.collectionView, let sliderView = collectionView.superview as? AvatarSliderView {
-            leadingSpacing = (collectionView.frame.width - itemSize.width) / 2
-            itemWidth = itemSize.width + itemSpacing
+            self.leadingSpacing = (collectionView.frame.width - itemSize.width) / 2
+            self.itemWidth = itemSize.width + self.itemSpacing
             self.numberOfItems = sliderView.collectionView(collectionView, numberOfItemsInSection: 0)
-            var contentWidth = leadingSpacing * 2
-            contentWidth += itemSize.width * CGFloat(numberOfItems)
-            contentWidth += itemSpacing * CGFloat(numberOfItems - 1)
+
+            var contentWidth = self.leadingSpacing * 2                          // Leading & trailing spacing
+            contentWidth += itemSize.width * CGFloat(self.numberOfItems)        // Item sizes
+            contentWidth += self.itemSpacing * CGFloat(self.numberOfItems - 1)  // Interitem spacing
             self.contentSize = CGSize(width: contentWidth, height: collectionView.frame.height)
+
             self.calculateAttributes()
         }
     }
@@ -40,7 +40,7 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
         }
 
         let targetItem = self.targetItem(for: proposedContentOffset.x)
-        let updatedOffset = itemWidth * CGFloat(targetItem)
+        let updatedOffset = self.itemWidth * CGFloat(targetItem)
 
         return CGPoint(x: updatedOffset, y: proposedContentOffset.y)
     }
@@ -48,7 +48,7 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var visibleLayoutAttributes = [UICollectionViewLayoutAttributes]()
 
-        for attributes in cacheAttributes {
+        for attributes in self.cacheAttributes {
             if attributes.frame.intersects(rect) {
                 visibleLayoutAttributes.append(attributes)
             }
@@ -57,7 +57,7 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return cacheAttributes[indexPath.item]
+        return self.cacheAttributes[indexPath.item]
     }
 
     override var collectionViewContentSize: CGSize {
@@ -71,30 +71,30 @@ class AvatarViewLayout: UICollectionViewFlowLayout {
             return
         }
 
-        var xOffset = leadingSpacing
+        var xOffset = self.leadingSpacing
         let yOffset = (collectionView.frame.height - itemSize.height) / 2
 
-        for item in 0 ..< numberOfItems {
+        for item in 0 ..< self.numberOfItems {
             let indexPath = IndexPath(item: item, section: 0)
             let frame = CGRect(x: xOffset, y: yOffset, width: itemSize.width, height: itemSize.height)
 
             let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
             attributes.frame = frame
-            cacheAttributes.append(attributes)
-            xOffset += itemWidth
+            self.cacheAttributes.append(attributes)
+            xOffset += self.itemWidth
         }
     }
 
     // MARK: - Methods
 
     func contentOffset(for index: Int) -> CGPoint {
-        let offsetX = CGFloat(index) * itemWidth
+        let offsetX = CGFloat(index) * self.itemWidth
         return CGPoint(x: offsetX, y: 0)
     }
 
     func targetItem(for contentOffset: CGFloat) -> Int {
-        currentPage = Int(round(contentOffset / itemWidth))
-        currentPage = min(currentPage, numberOfItems - 1)
+        var currentPage = Int(round(contentOffset / self.itemWidth))
+        currentPage = min(currentPage, self.numberOfItems - 1)
         currentPage = max(currentPage, 0)
         return currentPage
     }

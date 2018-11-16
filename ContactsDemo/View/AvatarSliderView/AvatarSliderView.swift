@@ -24,10 +24,10 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
     public weak var dataSource: AvatarSliderViewDataSource?
     public weak var delegate: AvatarSliderViewDelegate?
 
-    /// The percentage of x position at which the origin of the content view is offset from the origin of the sliderView.
+    // The percentage of x position at which the origin of the content view is offset from the origin of the sliderView.
     public var scrollOffset: CGFloat {
         let contentOffset = self.collectionView.contentOffset.x
-        let scrollOffset = Double(contentOffset/self.collectionViewLayout.itemWidth)
+        let scrollOffset = Double(contentOffset / self.collectionViewLayout.itemWidth)
         return fmod(CGFloat(scrollOffset), CGFloat(Double(self.numberOfItems)))
     }
 
@@ -86,17 +86,16 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
     public func dequeueReusableCell(withReuseIdentifier identifier: String, at index: Int) -> AvatarViewCell {
         let indexPath = IndexPath(item: index, section: 0)
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath)
+
         guard let sliderCell = cell as? AvatarViewCell else {
             fatalError("Cell class must be subclass of AvatarViewCell")
         }
+
         return sliderCell
     }
 
     public func scrollToItem(at index: Int, animated: Bool) {
-        guard index < self.numberOfItems else {
-            return
-        }
-        guard !self.isScrolling else {
+        guard index < self.numberOfItems && !self.isScrolling else {
             return
         }
 
@@ -109,6 +108,7 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         guard index < self.numberOfItems else {
             return
         }
+
         let indexPath = IndexPath(item: index, section: 0)
         self.collectionView.deselectItem(at: indexPath, animated: animated)
     }
@@ -134,8 +134,9 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let dataSource = self.dataSource else {
-            return 1
+            return 0
         }
+
         self.numberOfItems = dataSource.numberOfItems(in: self)
         return self.numberOfItems
     }
@@ -162,6 +163,7 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         guard let function = self.delegate?.sliderView(_:didSelectItemAt:) else {
             return
         }
+
         self.selectItem(for: self.previousItem, selected: false)
         let index = indexPath.item % self.numberOfItems
         function(self, index)

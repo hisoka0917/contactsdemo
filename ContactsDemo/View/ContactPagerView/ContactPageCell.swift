@@ -37,8 +37,9 @@ public class ContactPageCell: UICollectionViewCell {
     override public func layoutSubviews() {
         super.layoutSubviews()
 
+        let contentSize = self.contentView.frame.size
         var topY: CGFloat = 20
-        let nameFrame = CGRect(x: 0, y: topY, width: self.contentView.frame.width, height: 24)
+        let nameFrame = CGRect(x: 0, y: topY, width: contentSize.width, height: 24)
         self.nameLabel.frame = nameFrame
 
         topY = nameFrame.maxY + 4
@@ -50,40 +51,35 @@ public class ContactPageCell: UICollectionViewCell {
         self.aboutMeLabel.frame = aboutFrame
 
         topY = aboutFrame.maxY + 4
-        let introduceFrame = CGRect(x: 16, y: topY, width: aboutFrame.width, height: self.contentView.frame.height - topY)
+        let introduceFrame = CGRect(x: 16, y: topY, width: aboutFrame.width, height: contentSize.height - topY)
         self.introduceTextView.frame = introduceFrame
     }
 
     private func commonInit() {
         self.backgroundColor = UIColor.white
-        let contentSize = self.contentView.frame.size
-        var topY: CGFloat = 20
 
         self.nameLabel.textAlignment = .center
         self.nameLabel.textColor = UIColor.darkText
         self.nameLabel.font = UIFont.systemFont(ofSize: 20)
-        self.nameLabel.frame = CGRect(x: 0, y: topY, width: contentSize.width, height: 24)
+        self.nameLabel.frame = CGRect.zero
         self.contentView.addSubview(self.nameLabel)
 
-        topY += 24 + 4
         self.titleLabel.textAlignment = .center
         self.titleLabel.textColor = UIColor.gray
         self.titleLabel.font = UIFont.systemFont(ofSize: 16)
-        self.titleLabel.frame = CGRect(x: 0, y: topY, width: contentSize.width, height: 18)
+        self.titleLabel.frame = CGRect.zero
         self.contentView.addSubview(self.titleLabel)
 
-        topY += 18 + 32
         self.aboutMeLabel.textAlignment = .left
         self.aboutMeLabel.textColor = UIColor.darkText
         self.aboutMeLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        self.aboutMeLabel.frame = CGRect(x: 16, y: topY, width: contentSize.width - 32, height: 18)
+        self.aboutMeLabel.frame = CGRect.zero
         self.aboutMeLabel.text = "About me"
         self.contentView.addSubview(self.aboutMeLabel)
 
-        topY += 18 + 4
         self.introduceTextView.textColor = UIColor.gray
         self.introduceTextView.font = UIFont.systemFont(ofSize: 16)
-        self.introduceTextView.frame = CGRect(x: 16, y: topY, width: contentSize.width - 32, height: contentSize.height - topY)
+        self.introduceTextView.frame = CGRect.zero
         self.introduceTextView.isEditable = false
         self.introduceTextView.isSelectable = false
         self.introduceTextView.showsVerticalScrollIndicator = false

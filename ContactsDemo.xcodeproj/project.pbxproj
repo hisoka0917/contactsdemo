@@ -101,12 +101,9 @@
 		E942E20D219D6283005891DB /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E98D767F219981FF0048FDE9 /* AvatarViewCell.swift */,
-				E9A0196F219AA7EB00B21908 /* AvatarViewLayout.swift */,
-				E9A01971219ABA8900B21908 /* AvatarSliderView.swift */,
-				E942E20A219D625C005891DB /* ContactPageCell.swift */,
+				E9617D3F219E9C340098ADC0 /* AvatarSliderView */,
+				E9617D40219E9C410098ADC0 /* ContactPagerView */,
 				E942E20F219D6C92005891DB /* ContactsView.swift */,
-				E9617D3D219E65BB0098ADC0 /* ContactPagerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -117,6 +114,25 @@
 				E98D767D21997D370048FDE9 /* Contact.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		E9617D3F219E9C340098ADC0 /* AvatarSliderView */ = {
+			isa = PBXGroup;
+			children = (
+				E98D767F219981FF0048FDE9 /* AvatarViewCell.swift */,
+				E9A0196F219AA7EB00B21908 /* AvatarViewLayout.swift */,
+				E9A01971219ABA8900B21908 /* AvatarSliderView.swift */,
+			);
+			path = AvatarSliderView;
+			sourceTree = "<group>";
+		};
+		E9617D40219E9C410098ADC0 /* ContactPagerView */ = {
+			isa = PBXGroup;
+			children = (
+				E942E20A219D625C005891DB /* ContactPageCell.swift */,
+				E9617D3D219E65BB0098ADC0 /* ContactPagerView.swift */,
+			);
+			path = ContactPagerView;
 			sourceTree = "<group>";
 		};
 		E98D763F219956310048FDE9 = {
@@ -490,6 +506,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ContactsDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -507,6 +524,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ContactsDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -79,6 +79,7 @@ extension ContactsView: ContactPagerViewDelegate, ContactPagerViewDataSource {
         guard let dataSource = self.dataSource else {
             return 0
         }
+
         self.itemCounts = dataSource.numberOfItems(in: self)
         return self.itemCounts
     }
@@ -104,7 +105,6 @@ extension ContactsView: ContactPagerViewDelegate, ContactPagerViewDataSource {
     func pagerViewDidStopped(at index: Int) {
         self.avatarSliderView.setSelectItem(index)
     }
-    
 }
 
 extension ContactsView: AvatarSliderViewDelegate, AvatarSliderViewDataSource {
@@ -115,6 +115,7 @@ extension ContactsView: AvatarSliderViewDelegate, AvatarSliderViewDataSource {
         guard let dataSource = self.dataSource else {
             return 0
         }
+
         self.itemCounts = dataSource.numberOfItems(in: self)
         return self.itemCounts
     }
@@ -125,6 +126,7 @@ extension ContactsView: AvatarSliderViewDelegate, AvatarSliderViewDataSource {
             let contact = dataSource.contactsView(self, contactDataAt: index)
             cell.imageName = contact.avatar_filename
         }
+
         return cell
     }
 

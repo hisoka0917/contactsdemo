@@ -23,10 +23,10 @@ public class ContactPagerView: UIView, UICollectionViewDelegate, UICollectionVie
     public weak var dataSource: ContactPagerViewDataSource?
     public weak var delegate: ContactPagerViewDelegate?
 
-    /// The percentage of y position
+    // The percentage of y position
     public var scrollOffset: CGFloat {
         let contentOffset = self.collectionView.contentOffset.y
-        let scrollOffset = Double(contentOffset/self.collectionViewLayout.itemSize.height)
+        let scrollOffset = Double(contentOffset / self.collectionViewLayout.itemSize.height)
         return fmod(CGFloat(scrollOffset), CGFloat(Double(self.numberOfItems)))
     }
 
@@ -65,7 +65,6 @@ public class ContactPagerView: UIView, UICollectionViewDelegate, UICollectionVie
         self.collectionView.isPagingEnabled = true
 
         self.collectionViewLayout.scrollDirection = .vertical
-        self.collectionViewLayout.itemSize = self.bounds.size
         self.collectionViewLayout.minimumInteritemSpacing = 0
         self.collectionViewLayout.minimumLineSpacing = 0
 
@@ -103,6 +102,7 @@ public class ContactPagerView: UIView, UICollectionViewDelegate, UICollectionVie
         guard let dataSource = self.dataSource else {
             return 0
         }
+
         self.numberOfItems = dataSource.numberOfPages(in: self)
         return self.numberOfItems
     }
@@ -125,6 +125,7 @@ public class ContactPagerView: UIView, UICollectionViewDelegate, UICollectionVie
         guard let function = self.delegate?.pagerViewDidScroll(_:) else {
             return
         }
+
         function(self)
     }
 
