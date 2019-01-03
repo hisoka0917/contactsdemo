@@ -149,9 +149,9 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
         }
 
         if indexPath.row == 0 && self.previousItem == 0 && self.targetItem == 0 {
-            cell.isSelected = true
+            cell.setSelection(true)
         } else {
-            cell.isSelected = false
+            cell.setSelection(false)
         }
 
         return cell
@@ -208,5 +208,8 @@ public class AvatarSliderView: UIView, UICollectionViewDelegate, UICollectionVie
     private func selectItem(for index: Int, selected: Bool) {
         let indexPath = IndexPath(item: index, section: 0)
         self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+        if let cell = self.collectionView.cellForItem(at: indexPath) as? AvatarViewCell {
+            cell.setSelection(selected)
+        }
     }
 }

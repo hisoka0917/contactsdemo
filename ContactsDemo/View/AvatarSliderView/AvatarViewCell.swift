@@ -17,16 +17,6 @@ public class AvatarViewCell: UICollectionViewCell {
         }
     }
 
-    public override var isSelected: Bool {
-        didSet {
-            if isSelected {
-                self.contentView.layer.addSublayer(self.shapeLayer)
-            } else {
-                self.shapeLayer.removeFromSuperlayer()
-            }
-        }
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.commonInit()
@@ -47,6 +37,10 @@ public class AvatarViewCell: UICollectionViewCell {
         self.shapeLayer.lineWidth = 4.0
     }
 
+    public override func prepareForReuse() {
+        self.shapeLayer.removeFromSuperlayer()
+    }
+
     override public func layoutSubviews() {
         super.layoutSubviews()
         let bounds = self.contentView.bounds
@@ -58,5 +52,13 @@ public class AvatarViewCell: UICollectionViewCell {
                                       startAngle: CGFloat(0), endAngle: CGFloat.pi * 2,
                                       clockwise: true)
         self.shapeLayer.path = circlePath.cgPath
+    }
+
+    func setSelection(_ select: Bool) {
+        if select {
+            self.contentView.layer.addSublayer(self.shapeLayer)
+        } else {
+            self.shapeLayer.removeFromSuperlayer()
+        }
     }
 }
